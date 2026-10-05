@@ -13,7 +13,7 @@ struct Node
     Node(string n, int c) : name(n), cost(c), owner(""), next(nullptr) {} // constructor
 };
 
-class MonopolyBoard
+class MonopolyBoard //circular linked list
 {
 private:
     Node *tail;
@@ -29,7 +29,7 @@ public:
         }
 
         Node *current = tail->next; // start at the first square
-        tail->next = nullptr;       // break the circle so the walk has an end
+        tail->next = nullptr;       // break the circle so the walk has an end, no longer circular
 
         while (current != nullptr)
         {
@@ -196,7 +196,7 @@ struct Player
 
 int main()
 {
-    srand(42);   // fixed seed for rand
+    srand(42); // fixed seed for rand
 
     MonopolyBoard board;
     board.insert("GO", 0);
@@ -216,29 +216,38 @@ int main()
 
     Player players[2] = {
         {"Ismael", board.getStart(), 1500},
-        {"Sofia",   board.getStart(), 1500}
-    };
+        {"Sofia", board.getStart(), 1500}};
 
     const int TURNS = 12;
-    for (int turn = 1; turn <= TURNS; turn++) {
-        Player& p = players[(turn - 1) % 2];   // alternate players
-        int roll = rand() % 6 + 1;             // dice roll 1-6
+    for (int turn = 1; turn <= TURNS; turn++)
+    {
+        Player &p = players[(turn - 1) % 2]; // alternate players
+        int roll = rand() % 6 + 1;           // dice roll 1-6
 
         p.position = board.move(p.position, roll);
-        Node* space = p.position;
+        Node *space = p.position;
 
         cout << "\nTurn " << turn << ": " << p.name << " rolls " << roll
              << " and lands on " << space->name << endl;
 
-          if (space->cost == 0) {
+        if (space->cost == 0)
+        {
             cout << "  Nothing to buy here." << endl;
-        } else if (space->owner == p.name) {
+        }
+        else if (space->owner == p.name)
+        {
             cout << "  You already own this." << endl;
-        } else if (!space->owner.empty()) {
+        }
+        else if (!space->owner.empty())
+        {
             cout << "  Already owned by " << space->owner << " - can't buy." << endl;
-        } else if (p.money < space->cost) {
+        }
+        else if (p.money < space->cost)
+        {
             cout << "  Can't afford it ($" << p.money << " left)." << endl;
-        } else if (board.purchase(space, p.name)) {
+        }
+        else if (board.purchase(space, p.name))
+        {
             p.money -= space->cost;
             cout << "  Bought it for $" << space->cost
                  << ". Money left: $" << p.money << endl;
@@ -249,11 +258,11 @@ int main()
     board.display();
 
     cout << "\n=== Final players ===" << endl;
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < 2; i++)
+    {
         cout << players[i].name << " is on " << players[i].position->name
              << " with $" << players[i].money << endl;
     }
 
     return 0;
-
 }
