@@ -1,10 +1,3 @@
-// CS 210 - Assignment 6: Passwords and Hash Tables
-// Build: clang++ -std=c++17 -Wall -Wextra assignment6_complete.cpp -o assignment6
-// Run:   ./assignment6
-//
-// EDUCATIONAL ONLY: demoHash is NOT a secure password-hashing scheme.
-// Restriction respected: unordered_map is NOT used for the user table.
-//
 // Four collision strategies are implemented behind one interface (HashTable):
 //   1. Separate chaining      (the strategy chosen for the login demo, my fav)
 //   2. Linear probing
@@ -340,9 +333,6 @@ protected:
 };
 
 // Double hashing: home + i * step, where step comes from a SECOND hash of the key.
-// Two keys with the same home slot usually get different steps, so they
-// separate right away. The step is forced odd so it is coprime with the
-// power-of-two table size and therefore can reach every slot.
 class DoubleHashingTable : public OpenAddressingTable {
 public:
     explicit DoubleHashingTable(size_t slots = 8, double maxLoad = 0.5)
@@ -384,8 +374,7 @@ public:
     }
 
 private:
-    // 8 random bytes written as 16 hex characters. The fixed seed makes the
-    // demo output repeatable; real systems use a cryptographically secure RNG.
+    // 8 random bytes written as 16 hex characters.
     string makeSalt() {
         ostringstream os;
         os << hex << setfill('0') << setw(16) << rng_();
@@ -477,7 +466,7 @@ static void compareStrategies(int n) {
 
 int main() {
     // =======================================================================
-    // PART 1: Login demo on the CHOSEN strategy: separate chaining.
+    // PART 1: Login demo on my CHOSEN strategy: separate chaining.
     // Starts with only 4 buckets so the rehash events are easy to see.
     // =======================================================================
     SeparateChainingTable table(4, 0.75);
